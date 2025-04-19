@@ -5,21 +5,28 @@ const todoSchema = new mongoose.Schema(
     {
         title : {
             type : String,
-            require : true
+            required : [true , "Title is required!"]
         },
         description : {
             type : String,
-            default: ""
+            maxlength: [500, 'Description cannot exceed 500 characters'],
+            default : ""
         },
         status : {
             type: String,
-            enum: ['PENDING', 'COMPLETED', 'IN-PROGRESS'],
-            default: null
+            enum: {
+                values: ['PENDING', 'IN-PROGRESS', 'COMPLETED'],
+                message: 'Invalid status'
+            },        
+            default : "PENDING"    
         },
         priority : {
             type : String,
-            enum: ['LOW' , 'MEDIUM' , "HIGH"],
-            default : null,
+            enum:  {
+                values : ['LOW' , 'MEDIUM' , "HIGH"],
+                message : "Invalid priority"
+            },
+            default: "LOW",
         }
     },
     {timestamps : true}

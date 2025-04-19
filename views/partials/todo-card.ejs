@@ -1,0 +1,17 @@
+<div data-todo-id="<%- todo.id %>" class="todo-card">
+  <div class="todo-header">
+    <h2 class="todo-title"><%- todo.title %></h2>
+    <span class="todo-status status-completed"><%- todo.status %></span>
+  </div>
+  <p class="todo-description"><%- todo.description %></p>
+  <div class="todo-meta">
+    <span class="todo-date"
+      ><%- new Date(todo.createdAt).toLocaleString() %></span
+    >
+    <span class="todo-priority priority-low"><%- todo.priority %></span>
+  </div>
+  <div class="todo-actions">
+    <button class="btn-edit">Edit</button>
+    <button class="btn-delete" data-todo-id="<%- todo._id %>">Delete</button>
+  </div>
+</div>

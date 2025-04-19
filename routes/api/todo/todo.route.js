@@ -1,5 +1,5 @@
 const { Router } = require("express")
-const { getAllTodos, getSingleTodo, addNewTodo, updateSingleTodo, removeSingleTodo } = require("../../services/todo.service")
+const { getAllTodos, getSingleTodo, addNewTodo, updateSingleTodo, removeSingleTodo } = require("../../../services/todo.service")
 
 const todoRouter = Router()
 

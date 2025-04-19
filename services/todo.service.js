@@ -1,30 +1,104 @@
+const { isValidObjectId } = require("mongoose");
 const todoModel = require("../models/todo")
 
-async function getAllTodos(req , res) {
+async function getAllTodos(req , res, isView = false) {
     const todos = await todoModel.find();
 
-    res.json({message : "All Todos" , data : todos})
+    if (isView) {
+      return  res.render("pages/todos/index" , {todos : todos} )
+    }
+    
+    return res.json({message : "All Todos" , data : todos})
+}
+
+async function getAllTodosView(req , res, isView = false) {
+    const todos = await todoModel.find();
+
+    return  res.render("pages/todos/index" , {todos : todos} )
 }
 
 async function getSingleTodo(req , res) {
-    res.send("Get Single Todo")
+    const { id } = req.params
+
+    if (!isValidObjectId(id)) {
+       return  res.status(404).json({message : "Not valid id"})
+    }
+    const todo = await todoModel.findById(id)
+    if (!todo) {
+       return  res.status(404).json({message : "Todo not found"})
+    }
+   return res.json({data : todo})
 }
 
 async function addNewTodo(req , res) {
-    const todoData = res.body
-    
-    const newTodo = await todoModel.create(todoData)
+    try {
+        const todoData = req.body        
+        const newTodo = await todoModel.create(todoData)
 
-    return res.status(201).json({message : "Created sucessfully" , data : newTodo})
-    
+        return res.status(201).json({message : "Created sucessfully" , data : newTodo})
+
+    } catch (error) {
+        if (error.message) {
+            return res.status(404).json({message: error.message})
+        }
+    }   
 }
 
 async function removeSingleTodo(req , res) {
-    res.send("Remove Single Todo")
+    try {
+        const { id } = req.params
+
+        if (!isValidObjectId(id)) {
+            return  res.status(404).json({message : "Not valid id"})
+         }
+
+         const removedTodo = await todoModel.findByIdAndDelete(id)
+
+         if (!removedTodo) {
+            return  res.status(404).json({message : "Todo not found"})
+         }
+        
+        return res.status(201).json({message: "Deleted successfully" , data : removedTodo})
+
+
+    } catch (error) {
+        if (error.message) {
+            return res.status(404).json({message: error.message})
+        }
+    }
 }
 
 async function updateSingleTodo(req , res) {
-    res.send("Update Single todo")
+    try {
+        const { id } = req.params
+        const todoData = req.body        
+
+
+        if (!isValidObjectId(id)) {
+            return  res.status(404).json({message : "Not valid id"})
+         }
+
+         if(!['PENDING', 'IN-PROGRESS', 'COMPLETED'].includes(todoData.status)) {
+            return res.status(400).json({message : "Not valid status"})
+         }
+         if(!['LOW', 'MEDIUM', 'HIGH'].includes(todoData.priority)) {
+            return res.status(400).json({message : "Not valid priority"})
+         }
+
+         const updatedTodo = await todoModel.findByIdAndUpdate(id, todoData , {new : true})
+
+         if (!updatedTodo) {
+            return  res.status(404).json({message : "Todo not found"})
+         }
+        
+        return res.status(201).json({message: "updated successfully" , data : updatedTodo})
+
+
+    } catch (error) {
+        if (error.message) {
+            return res.status(404).json({message: error.message})
+        }
+    }
 }
 
-module.exports = { getAllTodos , getSingleTodo , addNewTodo , removeSingleTodo , updateSingleTodo }
+module.exports = { getAllTodos , getSingleTodo , addNewTodo , removeSingleTodo , updateSingleTodo , getAllTodosView }

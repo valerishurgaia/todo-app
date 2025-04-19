@@ -1,14 +1,19 @@
 const express = require("express")
-const apiRouter = require("./api/main")
+const apiRouter = require("./routes/api/api.routes")
 const connectDb = require("./db/db")
+const bodyParser = require('body-parser')
+const webRouter = require("./routes/web/web.routes")
 
 const app = express()
-
-app.use(express.json())
+app.set('view engine', 'ejs');
+app.set("views" , __dirname + "/views")
+app.use(express.static('public'))  // Add this line
+app.use(bodyParser.json())
 
 connectDb()
 
 app.use("/api" , apiRouter)
+app.use("/" , webRouter)
 
 
 
