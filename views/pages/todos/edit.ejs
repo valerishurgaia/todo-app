@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="/css/todo.css" />
+  </head>
+  <body>
+    <div class="todo-container">
+      <div class="edit-header">
+        <a href="/" class="back-arrow">← Back</a>
+        <h1>Edit Todo</h1>
+      </div>
+      <div class="edit-card-div">
+        <%- include("../../partials/todo-card.ejs" , {todo , isEdit}) %>
+      </div>
+      <%- include("../../partials/todo-form.ejs" , {todo}) %>
+    </div>
+
+    <script type="module" src="/js/requests.js"></script>
+    <script type="module" src="/js/todos.js"></script>
+  </body>
+</html>

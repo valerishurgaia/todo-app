@@ -1,18 +1,14 @@
 const { isValidObjectId } = require("mongoose");
 const todoModel = require("../models/todo")
 
-async function getAllTodos(req , res, isView = false) {
+async function getAllTodos(req , res) {
     const todos = await todoModel.find();
-
-    if (isView) {
-      return  res.render("pages/todos/index" , {todos : todos} )
-    }
     
     return res.json({message : "All Todos" , data : todos})
 }
 
-async function getAllTodosView(req , res, isView = false) {
-    const todos = await todoModel.find();
+async function getAllTodosView(req , res, ) {
+    const todos = await todoModel.find().sort({ createdAt: -1 });
 
     return  res.render("pages/todos/index" , {todos : todos} )
 }
@@ -68,6 +64,26 @@ async function removeSingleTodo(req , res) {
     }
 }
 
+async function getEditTodoView(req , res) {
+    try {
+        const { id } = req.params;
+        const todo = await todoModel.findById(id);
+        
+        if (!isValidObjectId(id)) {
+            return  res.render("pages/not-found");
+        }
+        
+        if (!todo) {
+            return  res.render("pages/not-found");
+        }
+        
+        return res.render("pages/todos/edit", { todo: todo , isEdit : true  });
+    } catch (e) {
+        console.log(e);
+        return res.render("pages/not-found");
+    }
+}
+
 async function updateSingleTodo(req , res) {
     try {
         const { id } = req.params
@@ -91,7 +107,7 @@ async function updateSingleTodo(req , res) {
             return  res.status(404).json({message : "Todo not found"})
          }
         
-        return res.status(201).json({message: "updated successfully" , data : updatedTodo})
+        return res.status(201).json({message: "Updated successfully" , data : updatedTodo})
 
 
     } catch (error) {
@@ -101,4 +117,4 @@ async function updateSingleTodo(req , res) {
     }
 }
 
-module.exports = { getAllTodos , getSingleTodo , addNewTodo , removeSingleTodo , updateSingleTodo , getAllTodosView }
+module.exports = { getAllTodos , getSingleTodo , addNewTodo , removeSingleTodo , updateSingleTodo , getAllTodosView , getEditTodoView }

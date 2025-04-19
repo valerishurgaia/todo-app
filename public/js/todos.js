@@ -1,13 +1,32 @@
-import { createTodo , handleDeleteTodo, newTodoCard } from "../js/requests.js"
+import { createTodo , handleDeleteTodo, newTodoCard, updateTodo } from "../js/requests.js"
 
 const form = document.querySelector(".todo-form")
-const todoCards = document.querySelectorAll(".todo-card")
+const todoCards = Array.from(document.querySelectorAll(".todo-card"))
 const btnClear  = form.querySelector("#btn-clear")
 const todoCardsDiv = document.querySelector(".todo-cards-div")
+const editCardDiv = document.querySelector(".edit-card-div")
+const formMessageDiv = document.querySelector(".form-message")
+
+function setupDeleteButton(card) {
+    const deleteBtn = card.querySelector('.btn-delete');
+    if(deleteBtn) {
+
+        deleteBtn.addEventListener("click", async (e) => {
+            const {status} = await handleDeleteTodo(e.target.dataset.todoId);
+            if(status === 201) {
+                card.remove();
+            }
+        });
+    }
+}
+
+todoCards.forEach(setupDeleteButton);
 
 form.addEventListener("submit" , async (e) => {
     e.preventDefault()
     let isValid
+    let todoId = window.location.href.split("/").pop()
+    
 
     if (!form.title.value || form.title.value.length < 3 ) {
         isValid = false
@@ -24,36 +43,42 @@ form.addEventListener("submit" , async (e) => {
 
     const todo = {title , description , status , priority}
 
-    if(isValid) {
+    if(isValid && !todoId) {
         try {
-        const newTodo = await createTodo(todo)
+            const newTodo = await createTodo(todo)
+            const res = await newTodoCard(newTodo.data)
+            const cardHtml = await res.text();
 
-        const res = await newTodoCard(newTodo.data)
-        const cardHtml = await res.text();
-        console.log(todoCardsDiv)
+            todoCardsDiv.insertAdjacentHTML("afterbegin" , cardHtml)
+            const newCard = todoCardsDiv.firstElementChild
+            formMessageDiv.textContent = newTodo.message;
+            todoCards.push(newCard)
+            
+            setupDeleteButton(newCard);
 
-        todoCardsDiv.insertAdjacentHTML("afterbegin" , cardHtml)
-        // console.log(newCard)
+            form.reset()
 
-        form.reset()
-
-        // window.location.reload()
+            setTimeout(() => {
+                formMessageDiv.textContent = ""
+            }, 2000)
         } catch (error) {
             console.log(error)
         }
     }
+    if(isValid && todoId) {
+        const updatedTodo = await updateTodo(todo , todoId)
+        const res = await newTodoCard({...updatedTodo.data , isEdit : true})
+        const cardHtml = await res.text();
+        editCardDiv.innerHTML = cardHtml;
+        formMessageDiv.textContent = updatedTodo.message;
+        setTimeout(() => {
+            formMessageDiv.textContent = ""
+        }, 2000)
+    }
 })
 
-Array.from(todoCards).forEach((el) => {
-    const deleteBtn = el.querySelector('.btn-delete');
-    deleteBtn.addEventListener("click", async (e) => {
-        const {status} = await handleDeleteTodo(e.target.dataset.todoId);
-        if(status === 201) {
-            el.remove();
-        }
-    });
-});
-
-btnClear.addEventListener("click" , () => {
-    form.reset()
-})
+if(btnClear) {
+    btnClear.addEventListener("click" , () => {
+        form.reset()
+    })
+}

@@ -20,6 +20,10 @@
     box-shadow: 0 5px 20px rgba(0,0,0,0.05);
   }
 
+  a {
+    text-decoration: none;
+  }
+
   .todo-cards-div {
     display: flex;
     flex-direction: column;
@@ -28,7 +32,6 @@
   
   h1 {
     text-align: center;
-    margin-bottom: 30px;
     color: #2c3e50;
     font-weight: 600;
   }
@@ -36,10 +39,24 @@
   .todo-form {
     background-color: #f8fafc;
     padding: 25px;
+    margin-top: 10px;
     border-radius: 10px;
     margin-bottom: 30px;
     box-shadow: 0 3px 10px rgba(0,0,0,0.03);
     border: 1px solid #e6eef7;
+  }
+  
+  .edit-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 30px;
+    position: relative;
+  }
+
+  .edit-header > a {
+    position: absolute;
+    left: 0;
   }
   
   .form-group {
@@ -79,6 +96,18 @@
     justify-content: flex-end;
     gap: 12px;
     margin-top: 10px;
+    align-items: center;
+  }
+  .message-div {
+    flex: 1;
+  }
+
+  .form-message {
+    color: #4BB543 ;
+    padding-left: 10px;
+    font-size: 0.85rem;
+    font-weight: 400;
+    width: fit-content;
   }
   
   .btn {

@@ -1,4 +1,4 @@
-<div data-todo-id="<%- todo.id %>" class="todo-card">
+<div data-todo-id="<%- todo._id %>" class="todo-card">
   <div class="todo-header">
     <h2 class="todo-title"><%- todo.title %></h2>
     <span class="todo-status status-completed"><%- todo.status %></span>
@@ -10,8 +10,10 @@
     >
     <span class="todo-priority priority-low"><%- todo.priority %></span>
   </div>
-  <div class="todo-actions">
-    <button class="btn-edit">Edit</button>
-    <button class="btn-delete" data-todo-id="<%- todo._id %>">Delete</button>
-  </div>
+  <% if (!isEdit) { %>
+    <div class="todo-actions">
+      <button class="btn-edit"><a href="/edit/<%- todo._id %>">Edit</a></by>
+      <button class="btn-delete" data-todo-id="<%- todo._id %>">Delete</button>
+    </div>
+  <% } %>
 </div>
