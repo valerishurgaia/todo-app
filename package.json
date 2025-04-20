@@ -2,9 +2,15 @@
   "name": "todo-express-mongo",
   "version": "1.0.0",
   "description": "",
-  "main": "script.js",
+  "type": "module",
+  "main": "script.ts",
   "scripts": {
-    "start": "nodemon script.js",
+    "prebuild": "rimraf ./public/dist",
+    "build": "npx tsc && cp -r src/views public/dist/",
+    "start": "node --experimental-specifier-resolution=node public/dist/script.js",
+    "watch:ts": "npx tsc -w",
+    "watch:server": "nodemon --watch public/dist --exec \"npm start\"",
+    "dev": "npm run build && concurrently \"npm run watch:ts\" \"npm run watch:server\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -16,6 +22,13 @@
     "ejs": "^3.1.10",
     "express": "^5.1.0",
     "mongoose": "^8.13.2",
-    "nodemon": "^3.1.9"
+    "rimraf": "^6.0.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.1",
+    "@types/node": "^22.14.1",
+    "concurrently": "^9.1.2",
+    "nodemon": "^3.1.9",
+    "typescript": "^5.8.3"
   }
 }

@@ -11,9 +11,9 @@
     <span class="todo-priority priority-low"><%- todo.priority %></span>
   </div>
   <% if (!isEdit) { %>
-    <div class="todo-actions">
-      <button class="btn-edit"><a href="/edit/<%- todo._id %>">Edit</a></by>
-      <button class="btn-delete" data-todo-id="<%- todo._id %>">Delete</button>
-    </div>
+  <div class="todo-actions">
+    <button class="btn-edit"><a href="/edit/<%- todo._id %>">Edit</a></button>
+    <button class="btn-delete" data-todo-id="<%- todo._id %>">Delete</button>
+  </div>
   <% } %>
 </div>

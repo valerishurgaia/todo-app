@@ -1,5 +1,5 @@
-const { Router } = require("express")
-const todoRouter = require("./todo/todo.route")
+import { Router } from "express"
+import todoRouter from "./todo/todo.route"
 
 const apiRouter = Router()
 
@@ -10,4 +10,4 @@ apiRouter.get("/" , (req , res) => {
 apiRouter.use('/todos' , todoRouter)
 
 
-module.exports = apiRouter
+export default apiRouter
