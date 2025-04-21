@@ -8,7 +8,7 @@
   </head>
   <body>
     <div class="todo-container">
-        <h1>My Todo List</h1>
+        <h1>Wellcome <%- user.username %></h1>
 
         <%- include("../../partials/todo-form.ejs", { todo: null}) %>
 
@@ -21,6 +21,10 @@
     </div>
       </div>
     </div>
+
+      <form class="logout-form" action="/logout" method="POST">
+        <button type="submit" class="logout-button">logout</button>
+      </form>
 
     <script type="module" src="/public/dist/src/js/requests.js"></script>
     <script type="module" src="/public/dist/src/js/todos.js"></script>

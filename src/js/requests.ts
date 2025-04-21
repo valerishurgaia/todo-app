@@ -56,6 +56,6 @@ export async function newTodoCard(data: Todo, isEdit: boolean = false): Promise<
         }
     });
     params.append('isEdit', String(isEdit));
-    const res = await fetch(`${BASE_URL}/todo-card-template?${params}`);
+    const res = await fetch(`${BASE_URL}/todo/todo-card-template?${params}`);
     return res;
 }

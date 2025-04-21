@@ -9,6 +9,7 @@
     background-color: #d2e0f4;
     color: #333;
     line-height: 1.6;
+    position: relative;
   }
   
   .todo-container {
@@ -108,6 +109,24 @@
     font-size: 0.85rem;
     font-weight: 400;
     width: fit-content;
+  }
+
+  .logout-form {
+    position: absolute;
+    top: 0;
+    right: 10px;
+  }
+
+  .logout-form > button {
+    background-color: #e53e3e;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    font-size: 0.95rem;
   }
   
   .btn {

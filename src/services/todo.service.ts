@@ -1,26 +1,55 @@
-import { isValidObjectId } from "mongoose";
-import todoModel from "../models/todo"
-import { Request, Response } from "express";
+import mongoose, { isValidObjectId } from "mongoose";
+import todoModel from "../models/todo.model"
+import { Request, Response, RequestHandler } from "express";
+import { getAuthUser, verifyUser } from "./user.service";
 
-async function getAllTodos(req: Request, res: Response): Promise<void> {
-    const todos = await todoModel.find();
-    res.json({message: "All Todos", data: todos})
+const getAllTodos: RequestHandler = async (req, res, next) => {
+    try {
+        const userId = await verifyUser(req?.cookies?.token);
+        if (!userId) {
+            res.status(401).json({ message: "Unauthorized" });
+            return;
+        }
+
+        const todos = await todoModel.find({ userId }).sort({ createdAt: -1 }) || [];
+        res.json(todos);
+    } catch (error) {
+        console.error('Error getting todos:', error);
+        res.status(500).json({ message: "Internal server error" });
+    }
 }
 
-async function getAllTodosView(req: Request, res: Response): Promise<void> {
-    const todos = await todoModel.find().sort({ createdAt: -1 });
-    res.render("pages/todos/index", {todos: todos})
+const getAllTodosView: RequestHandler = async (req, res, next) => {
+    try {
+        const userId = await verifyUser(req?.cookies?.token);
+        if (!userId) {
+            res.redirect("/auth/login");
+            return;
+        }
+        const user = await getAuthUser(userId)
+
+        const todos = await todoModel.find({ userId }).sort({ createdAt: -1 }) || [];
+        res.render("pages/todos/index", { todos , user });
+    } catch (error) {
+        console.error('Error getting todos:', error);
+        res.redirect("/auth/login");
+    }
 }
 
 async function getSingleTodo(req: Request, res: Response): Promise<void> {
     const { id } = req.params
+    const userId = await verifyUser(req?.cookies?.token);
+    if (!userId) {
+        res.status(401).json({ message: "Unauthorized" });
+        return;
+    }
 
     if (!isValidObjectId(id)) {
         res.status(404).json({message: "Not valid id"})
         return
     }
-    const todo = await todoModel.findById(id)
-    if (!todo) {
+    const todo = await todoModel.findOne({ _id: id, userId });
+        if (!todo) {
         res.status(404).json({message: "Todo not found"})
         return
     }
@@ -29,8 +58,17 @@ async function getSingleTodo(req: Request, res: Response): Promise<void> {
 
 async function addNewTodo(req: Request, res: Response): Promise<void> {
     try {
-        const todoData = req.body        
-        const newTodo = await todoModel.create(todoData)
+        const userId = await verifyUser(req?.cookies?.token);
+        if (!userId) {
+            return res.redirect("/auth/login");
+        }
+        const todoData = req.body  
+        const todo = {
+            ...todoData,
+            userId
+        }   
+
+        const newTodo = await todoModel.create(todo)
         res.status(201).json({message: "Created successfully", data: newTodo})
     } catch (error) {
         if (error instanceof Error) {
@@ -41,6 +79,11 @@ async function addNewTodo(req: Request, res: Response): Promise<void> {
 
 async function removeSingleTodo(req: Request, res: Response): Promise<void> {
     try {
+         const userId = await verifyUser(req?.cookies?.token);
+        if (!userId) {
+            res.status(401).json({ message: "Unauthorized" });
+            return;
+        }
         const { id } = req.params
 
         if (!isValidObjectId(id)) {
@@ -48,7 +91,7 @@ async function removeSingleTodo(req: Request, res: Response): Promise<void> {
             return
         }
 
-        const removedTodo = await todoModel.findByIdAndDelete(id)
+        const removedTodo = await todoModel.findOneAndDelete({ _id: id, userId })
 
         if (!removedTodo) {
             res.status(404).json({message: "Todo not found"})
@@ -65,6 +108,13 @@ async function removeSingleTodo(req: Request, res: Response): Promise<void> {
 
 async function getEditTodoView(req: Request, res: Response): Promise<void> {
     try {
+        const userId = await verifyUser(req?.cookies?.token);
+        if (!userId) {
+            res.redirect("/auth/login");
+            return;
+        }
+        const user = await getAuthUser(userId)
+
         const { id } = req.params;
         const todo = await todoModel.findById(id);
         
@@ -78,7 +128,7 @@ async function getEditTodoView(req: Request, res: Response): Promise<void> {
             return
         }
         
-        res.render("pages/todos/edit", { todo: todo, isEdit: true });
+        res.render("pages/todos/edit", { todo, isEdit: true , user });
     } catch (e) {
         console.log(e);
         res.render("pages/not-found");
@@ -87,6 +137,11 @@ async function getEditTodoView(req: Request, res: Response): Promise<void> {
 
 async function updateSingleTodo(req: Request, res: Response): Promise<void> {
     try {
+        const userId = await verifyUser(req?.cookies?.token);
+        if (!userId) {
+            res.status(401).json({ message: "Unauthorized" });
+            return;
+        }
         const { id } = req.params
         const todoData = req.body        
 
@@ -104,8 +159,11 @@ async function updateSingleTodo(req: Request, res: Response): Promise<void> {
             return
         }
 
-        const updatedTodo = await todoModel.findByIdAndUpdate(id, todoData, {new: true})
-
+        const updatedTodo = await todoModel.findOneAndUpdate(
+            { _id: id, userId },
+            todoData,
+            { new: true }
+        );
         if (!updatedTodo) {
             res.status(404).json({message: "Todo not found"})
             return

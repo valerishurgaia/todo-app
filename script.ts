@@ -6,6 +6,8 @@ import { connectDb } from "./src/db/db.js"
 import { fileURLToPath } from 'url'
 import { dirname, join } from 'path'
 import dotenv from 'dotenv'
+import { hasAuthWeb } from "./src/middlewares/auth.middleware.js"
+import cookieParser from 'cookie-parser'
 
 dotenv.config()
 
@@ -13,6 +15,8 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
 const app = express()
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 app.set('view engine', 'ejs');
 app.set("views" , join(__dirname, "views"))
 app.use(express.static('public'))

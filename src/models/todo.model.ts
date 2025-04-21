@@ -27,6 +27,11 @@ const todoSchema = new mongoose.Schema(
                 message : "Invalid priority"
             },
             default: "LOW",
+        },
+        userId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'user',
+            required: [true, 'User ID is required']
         }
     },
     {timestamps : true}

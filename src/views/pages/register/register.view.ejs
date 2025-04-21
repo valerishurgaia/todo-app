@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register</title>
+    <link rel="stylesheet" href="/css/login.css" />
+  </head>
+  <body>
+    <div class="login-container">
+      <div class="login-card">
+        <h2>Create your account</h2>
+        <%- include("../../partials/register-form.ejs", { error: error,
+        username: username, email: email, phone: phone }) %>
+        <div class="mt-4 text-center">
+          <p class="text-sm text-gray-600">
+            Already have an account?
+            <a class="auth-link" href="/auth/login">Sign in</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
