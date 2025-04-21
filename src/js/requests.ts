@@ -1,6 +1,7 @@
 import { Todo, TodoResponse } from "../../src/types/todo";
 
-const BASE_URL = "http://localhost:3000";
+// const BASE_URL = "http://localhost:3000";
+const BASE_URL = new URL(window.location.href).origin;
 
 export async function createTodo(todo: Todo): Promise<TodoResponse> {
     try {
@@ -20,6 +21,7 @@ export async function createTodo(todo: Todo): Promise<TodoResponse> {
 }
 
 export async function updateTodo(todo: Todo, id: string): Promise<TodoResponse> {
+    console.log(BASE_URL);
     try {
         const updatedTodo = await fetch(`${BASE_URL}/api/todos/${id}`, {
             method: 'PUT',  
