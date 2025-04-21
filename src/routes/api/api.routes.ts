@@ -1,6 +1,6 @@
 import { Router } from "express"
-import todoRouter from "./todo/todo.route"
-import authRouter from "./auth/auth.route"
+import todoRouter from "./todo/todo.route.js"
+import authRouter from "./auth/auth.route.js"
 
 const apiRouter = Router()
 

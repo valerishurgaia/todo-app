@@ -1,5 +1,5 @@
-import { Router, Request, Response, RequestHandler } from "express"
-import { getAllTodos, getSingleTodo, addNewTodo, updateSingleTodo, removeSingleTodo } from "../../../services/todo.service"
+import { Router, RequestHandler } from "express"
+import { getAllTodos, getSingleTodo, addNewTodo, updateSingleTodo, removeSingleTodo } from "../../../services/todo.service.js"
 
 const todoRouter: Router = Router()
 

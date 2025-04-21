@@ -1,5 +1,5 @@
 import { Request, RequestHandler, Response, Router } from "express";
-import { getLoginView, getRegisterView, webLoginHandler, webRegisterHandler } from "../../../services/auth.service";
+import { getLoginView, getRegisterView, webLoginHandler, webRegisterHandler } from "../../../services/auth.service.js";
 
 const authRouter : Router = Router()
 

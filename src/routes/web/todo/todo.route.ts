@@ -1,6 +1,5 @@
 import { Router } from "express";
-import { getEditTodoView } from "../../../services/todo.service";
-import { hasAuthWeb } from "../../../middlewares/auth.middleware";
+import { getEditTodoView } from "../../../services/todo.service.js";
 
 
 const todoWebRouter = Router()

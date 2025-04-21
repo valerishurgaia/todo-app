@@ -1,5 +1,5 @@
 import { RequestHandler, Router } from "express";
-import { loginHandler, registerHandler } from "../../../services/auth.service";
+import { loginHandler, registerHandler } from "../../../services/auth.service.js";
 
 const authRouter : Router = Router()
 
