@@ -1,11 +1,10 @@
 import { Request, Response } from "express";
 import bcrypt from "bcrypt"
-import userModel from "../models/user.model";
-import { signJwt, verifyJwt } from "./jwt.service";
-import { User } from "../types/user";
-import { error } from "console";
+import userModel from "../models/user.model.js";
+import { signJwt, verifyJwt } from "./jwt.service.js";
+import { User } from "../types/user.js";    
 
-// api handlers
+// api handlers 
 async function loginHandler(req : Request , res : Response) {
     const {email , password} = req.body
 

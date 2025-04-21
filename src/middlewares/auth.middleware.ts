@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { verifyJwt } from "../services/jwt.service";
+import { verifyJwt } from "../services/jwt.service.js";
 
 export function hasAuthApi(req: Request, res: Response, next: NextFunction) {
     const authHeader = req.headers['authorization'];

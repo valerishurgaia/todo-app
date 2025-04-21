@@ -4,7 +4,7 @@ import todoWebRouter from "./todo/todo.route.js"
 import { hasAuthWeb } from "../../middlewares/auth.middleware.js"
 import authRouter from "./auth/auth.route.js"
 import { logoutHandler } from "../../services/auth.service.js"  
-
+    
 const webRouter = Router()
 webRouter.use("/auth" , authRouter)
 

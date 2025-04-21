@@ -1,7 +1,7 @@
 import mongoose, { isValidObjectId } from "mongoose";
-import { verifyJwt } from "./jwt.service";
-import { User } from "../types/user";
-import userModel from "../models/user.model";
+import { verifyJwt } from "./jwt.service.js";
+import { User } from "../types/user.js";
+import userModel from "../models/user.model.js";
 
 
 export async function verifyUser(token : string) {

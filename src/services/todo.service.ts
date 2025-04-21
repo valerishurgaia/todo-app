@@ -1,7 +1,7 @@
 import mongoose, { isValidObjectId } from "mongoose";
-import todoModel from "../models/todo.model"
+import todoModel from "../models/todo.model.js"
 import { Request, Response, RequestHandler } from "express";
-import { getAuthUser, verifyUser } from "./user.service";
+import { getAuthUser, verifyUser } from "./user.service.js";
 
 const getAllTodos: RequestHandler = async (req, res, next) => {
     try {
